@@ -1,6 +1,9 @@
 require('express-async-errors');
 // antes de todo o código devemos importar a dependencia de tratamento de erros.
 
+// importando o arquivo de conexão com o banco de dados
+const database = require('./database/sqlite');
+
 // importando a classe de tratamento de erro
 const AppError = require('./utils/AppError');
 
@@ -19,6 +22,9 @@ app.use(express.json());
 
 // dizendo para o express que ele irá trabalhar com as rotas do arquivo index.js
 app.use(routes);
+
+// executando o banco de dados
+database()
 
 // o error é para capturarmos os erros que acontecerem na aplicação, a requisição é a requisição em si.
 // a resposta é a resposta que daremos para o cliente. O next é para caso quisermos que o erro continue a ser tratado por outras etapas.
