@@ -16,6 +16,7 @@ const usersController = new UsersController();
 // criando uma rota para o método POST
 // quando chegarmos na raiz / o usersController irá chamar o método create, mas antes disso, passará pelo middleware (que agora possui acesso a requisição)
 usersRoutes.post('/', usersController.create);
+usersRoutes.put('/:id', usersController.update);
 
 // exportando as rotas do usuário
 module.exports = usersRoutes;
