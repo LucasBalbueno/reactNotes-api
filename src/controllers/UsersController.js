@@ -1,5 +1,5 @@
-// importando a função que criptografa a senha (o hash)
-const { hash } = require('bcryptjs');
+// importando a função que criptografa a senha (o hash) e a função que compara a senha criptografada com a senha a ser atualizada (compare)
+const { hash, compare } = require('bcryptjs');
 
 // importando a classe de tratamento de erro
 const AppError = require ('../utils/AppError.js');
@@ -36,8 +36,8 @@ class UsersController {
 
     // função de atualização de usuário
     async update (request, response) {
-        // pegando o nome e email da requisição
-        const { name, email } = request.body;
+        // pegando o nome e email e senhas da requisição
+        const { name, email, password, old_password } = request.body;
 
         // pegando o id do usuário do parâmetro da rota
         const { id } = request.params;
@@ -63,11 +63,36 @@ class UsersController {
         }
 
         //atualizando o novo nome e email do usuário
-        user.name = name;
-        user.email = email;
+        // usando o operador "??", se o nome ou email for null ou undefined (não for informado), ele irá manter o nome ou email antigo (user.name ou user.email) que está no banco de dados
+        user.name = name ?? user.name;
+        user.email = email ?? user.email;
+
+        // criando uma condição para garantir que o usuário informe a senha anterior para atualizar a nova senha
+        if (password && !old_password) {
+            throw new AppError('Para atualizar a senha, você precisa informar a senha antiga', 401);
+        }
+
+        // criando uma condição se o usuário informou a senha antiga e a nova senha
+        if (password && old_password) {
+            // não podemos comparar a senha antiga com a nova com "=" pois a senha antiga está criptografada no bd
+            // para comparar senha criptografadas devemos usar a função compare da dependencia bcryptjs
+            const checkOldPassword = await compare(old_password, user.password);
+
+            if (!checkOldPassword) {
+                throw new AppError('Senha antiga incorreta', 401);
+            }
+
+            user.password = await hash(password, 8);
+        }
 
         // executando um script SQL para atualizar o nome, email e data de atualização do usuário onde o id for igual ao id passado na requisição
-        await database.run(`UPDATE users SET name = ?, email = ?, updated_at = ? WHERE id = ?`, [user.name, user.email, new Date(), id]);
+        await database.run(`UPDATE users SET
+        name = ?,
+        email = ?,
+        password = ?,
+        updated_at = DATETIME('now')
+        WHERE id = ?`,
+        [user.name, user.email, user.password, id]);
 
         // retornando uma resposta com um json vazio
         return response.json();
