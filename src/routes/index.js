@@ -8,10 +8,14 @@ const { Router } = require('express');
 const routes = Router();
 
 // importando o arquivo de rotas do usuário
-const usersRouter = require('./users.routes');
+const usersRoutes = require('./users.routes');
+const notesRoutes = require('./notes.routes');
 
 // toda a vez que alguem acessar a rota /users, o express irá redirecionar para o arquivo users.routes.js que é o grupo de rotas do usuário
-routes.use('/users', usersRouter);
+routes.use('/users', usersRoutes);
+
+// toda a vez que alguem acessar a rota /notes, o express irá redirecionar para o arquivo notes.routes.js que é o grupo de rotas de notas
+routes.use('/notes', notesRoutes);
 
 // exportando as rotas da aplicação, os grupos de rotas
 module.exports = routes;
