@@ -17,5 +17,14 @@ const notesController = new NotesController();
 // quando chegarmos na raiz / o usersController irá chamar o método create, mas antes disso, passará pelo middleware (que agora possui acesso a requisição)
 notesRoutes.post('/:user_id', notesController.create);
 
+// criando uma rota para o método GET
+notesRoutes.get('/:id', notesController.show);
+
+// criando uma rota para o método DELETE
+notesRoutes.delete('/:id', notesController.delete);
+
+// criando uma rota para o método GET (listas notas)
+notesRoutes.get('/', notesController.index);
+
 // exportando as rotas do usuário
 module.exports = notesRoutes;
