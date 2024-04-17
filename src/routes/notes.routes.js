@@ -1,5 +1,3 @@
-// A REPONSABILIDADE DE CONHECER A ROTAS DO USUÁRIO É DESTE ARQUIVO
-
 // importando Router do express
 // A função Router é usada para criar um "mini-aplicativo"
 const { Router } = require('express');
