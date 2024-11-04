@@ -2,6 +2,9 @@
 // A função Router é usada para criar um "mini-aplicativo"
 const { Router } = require('express');
 
+// importando o middleware ensureAuthenticated
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
+
 // importando o controler de notas do arquivo NotesController.js
 const NotesController = require('../controllers/NotesController');
 
@@ -11,9 +14,12 @@ const notesRoutes = Router();
 // criando uma instância da classe NotesController para poder usar ela na rota.
 const notesController = new NotesController();
 
+// importando o middleware ensureAuthenticated
+notesRoutes.use(ensureAuthenticated);
+
 // criando uma rota para o método POST
 // quando chegarmos na raiz / o usersController irá chamar o método create, mas antes disso, passará pelo middleware (que agora possui acesso a requisição)
-notesRoutes.post('/:user_id', notesController.create);
+notesRoutes.post('/', notesController.create);
 
 // criando uma rota para o método GET
 notesRoutes.get('/:id', notesController.show);

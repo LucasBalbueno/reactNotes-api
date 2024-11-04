@@ -2,6 +2,9 @@
 // A função Router é usada para criar um "mini-aplicativo"
 const { Router } = require('express');
 
+// importando o middleware ensureAuthenticated
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
+
 // importando o controler de notas do arquivo TagsController.js
 const TagsController = require('../controllers/TagsController');
 
@@ -12,7 +15,7 @@ const tagsRoutes = Router();
 const tagsController = new TagsController();
 
 // criando uma rota para o método GET (listas notas)
-tagsRoutes.get('/:user_id', tagsController.index);
+tagsRoutes.get('/', ensureAuthenticated, tagsController.index);
 
 // exportando as rotas do usuário
 module.exports = tagsRoutes;

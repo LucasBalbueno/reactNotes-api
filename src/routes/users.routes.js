@@ -6,6 +6,7 @@ const { Router } = require('express');
 
 // importando o controler do usuário do arquivo UsersController.js
 const UsersController = require('../controllers/UsersController');
+const ensureAuthenticated = require('../middlewares/ensureAuthenticated');
 
 // inicializando o Router do express
 const usersRoutes = Router();
@@ -14,9 +15,10 @@ const usersRoutes = Router();
 const usersController = new UsersController();
 
 // criando uma rota para o método POST
-// quando chegarmos na raiz / o usersController irá chamar o método create, mas antes disso, passará pelo middleware (que agora possui acesso a requisição)
+// quando chegarmos na raiz / o usersController irá chamar o método create,
 usersRoutes.post('/', usersController.create);
-usersRoutes.put('/:id', usersController.update);
+// quando chegarmos na raiz / o usersController irá chamar o método update, mas antes disso, passará pelo middleware
+usersRoutes.put('/', ensureAuthenticated, usersController.update);
 
 // exportando as rotas do usuário
 module.exports = usersRoutes;

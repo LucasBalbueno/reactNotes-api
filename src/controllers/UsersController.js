@@ -40,13 +40,13 @@ class UsersController {
         const { name, email, password, old_password } = request.body;
 
         // pegando o id do usuário do parâmetro da rota
-        const { id } = request.params;
+        const user_id = request.user.id;
 
         // criando a conexão com o banco de dados
         const database = await sqliteConnection();
 
         // usando um script SQL para verificar o usuário que corresponde ao id passado pela requisição
-        const user = await database.get('SELECT * FROM users WHERE id = (?)', [id]);
+        const user = await database.get('SELECT * FROM users WHERE id = (?)', [user_id]);
 
         // se o usuário não existir, retornamos um erro
         if (!user) {
@@ -92,7 +92,7 @@ class UsersController {
         password = ?,
         updated_at = DATETIME('now')
         WHERE id = ?`,
-        [user.name, user.email, user.password, id]);
+        [user.name, user.email, user.password, user_id]);
 
         // retornando uma resposta com um json vazio
         return response.json();

@@ -9,8 +9,8 @@ class NotesController {
         // pegando os dados do corpo da requisição
         const { title, description, tags, links } = request.body;
 
-        // pegando o id do usuário passado como parâmetro da rota
-        const { user_id } = request.params;
+        // pegando o id do usuário logado (que foi passado pelo middleware ensureAuthenticated)
+        const user_id = request.user.id;
 
         // inserindo a nova nota no banco de dados, porém é retornado o id em formato de array, por isso a desestruturação
         const [note_id] = await knex('notes').insert({
@@ -82,7 +82,10 @@ class NotesController {
     // função para listar as notas
     async index(request, response) {
         // pegando o id do usuário passado como query da rota (?user_id=1)
-        const { title, user_id, tags } = request.query;
+        const { title, tags } = request.query;
+
+        // pegando o id do usuário logado (que foi passado pelo middleware ensureAuthenticated)
+        const user_id = request.user.id;
 
         let notes;
 

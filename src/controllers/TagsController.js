@@ -6,7 +6,7 @@ class TagsController {
     // função para mostrar/listar as tags
     async index(request, response){
         // pegando o id do usuário passado como parâmetro da rota
-        const { user_id } = request.params;
+        const user_id = request.user.id;
 
         // pegando as tags no banco de dados onde o user_id for igual ao id passado como parâmetro
         const tags = await knex('tags')
