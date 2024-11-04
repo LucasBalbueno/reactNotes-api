@@ -7,6 +7,9 @@ const migrationsRun = require('./database/sqlite/migrations');
 // importando a classe de tratamento de erro
 const AppError = require('./utils/AppError');
 
+// importando o multer para poder fazer o upload de arquivos no servidor.
+const uploadConfig = require('./configs/upload');
+
 // importando o express. Como se tivessemos pegando toda a pasta do express e armazenando na variável express
 const express = require('express');
 
@@ -22,6 +25,9 @@ const app = express();
 
 // dizendo para o express que ele irá trabalhar com json (PARA O MÉTODO POST)
 app.use(express.json());
+
+// dizendo para o express que ele irá trabalhar com arquivos estáticos (PARA O MÉTODO GET)
+app.use("/files", express.static(uploadConfig.UPLOADS_FOLDER));
 
 // dizendo para o express que ele irá trabalhar com as rotas do arquivo index.js
 app.use(routes);
